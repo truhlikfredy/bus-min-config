@@ -49,3 +49,5 @@ If the vendor has more than 255 of devices using this protocol, then multiple Ve
 ## CONFIG_REVISION
 
 In case the same device has multiple different configurations then CONFIG_REVISION can be used. Similar to [semantic versioning](https://semver.org/), only updating major version when API changes, CONFIG_REVISION should be incremented when different layout/schema of the config is used. So driver can detect these changes and probe the config with the correct schema. If for some reason the config did not change, but the hardware/driver behaviour did change, then user is free to add their own additional REVISION register into the <CUSTOM_BLOCK>. This should allow one single firmware/driver to dynamically on runtime change implementations depending what revisions are detected.
+
+Note: Having multiple implementations of the driver and switching between them on runtime might affect the performance as the compiler might not be able to optimise as much as with static driver.
