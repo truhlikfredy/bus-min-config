@@ -1,6 +1,6 @@
 # Description
 
-This is v0.1 spec for a lightweight protocol which allows embedded slave/peripheral bus devices to describe their configuration to the drivers. Mainly focused for [AMBA](https://en.wikipedia.org/wiki/Advanced_Microcontroller_Bus_Architecture) open standard and its AHB/APB/AIX buses.
+This is v0.2 spec for a lightweight protocol (Minimalistic Bus Config aka MBC) which allows embedded slave/peripheral bus devices to describe their configuration to the drivers. Mainly focused for [AMBA](https://en.wikipedia.org/wiki/Advanced_Microcontroller_Bus_Architecture) open standard and its AHB/APB/AIX buses. There are [autoconfig](https://en.wikipedia.org/wiki/Autoconfig) and [plug and play](https://en.wikipedia.org/wiki/Plug_and_play) protocols in existence, however this is much more simpler and lightweight protocol targeting busses which are not covered by the mentioned protocols.
 
 | Register       | Width (bits) |Access   | Required | Alignment |
 |----------------|--------------|---------|----------|-----------|
@@ -25,20 +25,21 @@ By default it's 0x1DB8, a 16-bit value is considered as sufficient as this proto
 |-------|--------|-------|-------------|
 |MODE_DATA_WIDTH |0 |2 | 0=8-bit, 1=16-bit, 2=32-bit, 3=64-bit
 |MODE_ALIGNMENT |2 |2 | 0=8-bit, 1=16-bit, 2=32-bit, 3=64-bit
-|MODE_SIMPLIFIED |4 |1 | 0=The optional registers have to be implemented, 1=Omit optional registers |
+|MODE_FULL |4 |1 | 0=Omit optional registers, 1=The optional registers have to be implemented |
 |RESERVED | 5 | 3 | Currently not used
 
 The MODE_DATA_WIDTH >= MODE_ALIGNMENT condition needs to be meet, it's invalid to have a 64-bit data width peripheral with 8-bit alignment. 
 
-When MODE_SIMPLIFIED is set to 1, then VENDOR_ID, DEVICE_ID and CONFIG_REVISIONs have to be omitted.
+When MODE_FULL is set to 0, then VENDOR_ID, DEVICE_ID and CONFIG_REVISIONs have to be omitted. Only extra value from MBC with MODE_FULL==0 is that it describes it's own data width and alignment.
 
 ## VENDOR_ID
 
-Make pull-request, to reserve own vendor/user IDs (one vendor/user can allocate multiple IDs). However because I do not expect this spec to be widely used there is a allocated region of valid reserved VENDOR_IDs which are grand for experiments, these IDs can be freely used, just there is no guarantee that they will not be used by somebody else.
+Create issue or make pull-request to reserve own vendor/user IDs (one vendor/user can allocate multiple IDs). However because I do not expect this spec to be widely used there is a allocated region of valid reserved VENDOR_IDs which are grand for experiments, these IDs can be freely used, just there is no guarantee that they will not be used by somebody else.
 
 | ID | Vendor/User |
 |----|--------|
-| 0x0- 0xffef | free to allocate|
+| 0x0- 0xffee | free to be allocated|
+| 0xffef | Anton Krug |
 | 0xfff0 - 0xffff | Allocated for experimental use |
 
 ## DEVICE_ID
